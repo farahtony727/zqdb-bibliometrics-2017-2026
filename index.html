@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《证券市场导报》2017–2026 文献计量研究 | 902 篇论文的十年结构变迁</title>
+<meta name="description" content="基于 CNKI 全量数据的《证券市场导报》2017–2026 文献计量分析：产出、资助、合作、主题与引用影响力。">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+:root{
+  --paper:#f4f1e9; --card:#fffdf8; --ink:#172027; --ink2:#3f4a52; --ink3:#7b858c;
+  --line:#dcd5c7; --line2:#ece7dc; --teal:#0b5d6b; --teal2:#12808f; --amber:#b45309;
+  --red:#9a3412; --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.78;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+.serif{font-family:"Source Han Serif SC","Songti SC","STSong","SimSun",Georgia,serif}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+strong,b{font-weight:700;color:var(--ink)}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(244,241,233,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .inner{max-width:1160px;margin:0 auto;padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{font-size:13px;letter-spacing:.14em;font-weight:700;white-space:nowrap}
+.brand span{color:var(--teal)}
+.nav{display:flex;gap:18px;font-size:12px;color:var(--ink2)}
+.nav a{color:inherit;text-decoration:none;letter-spacing:.06em}
+.nav a:hover{color:var(--teal)}
+@media(max-width:900px){.nav{display:none}}
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--teal);width:0;z-index:60}
+
+/* cover */
+.cover{background:#101a20;color:#f7f3ea;margin-top:0;position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:52px 52px;pointer-events:none}
+.cover .inner{max-width:1160px;margin:0 auto;padding:76px 28px 64px;display:grid;grid-template-columns:1.45fr .8fr;gap:56px;position:relative;z-index:2}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:#9fc3c9;margin-bottom:26px}
+.cover h1{font-size:46px;line-height:1.22;font-weight:700;letter-spacing:.01em;margin-bottom:22px}
+.cover h1 em{font-style:normal;color:#f0b46a}
+.deck{font-size:15.5px;color:#c8d3d6;max-width:610px;line-height:1.9}
+.cover-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:44px;border-top:1px solid rgba(255,255,255,.14);padding-top:20px}
+.cm-label{font-size:10.5px;letter-spacing:.14em;color:#7f9499;margin-bottom:6px}
+.cm-value{font-family:var(--mono);font-size:13px;color:#e8eeef}
+.big{display:flex;flex-direction:column;justify-content:center;border-left:1px solid rgba(255,255,255,.14);padding-left:44px}
+.big .num{font-family:var(--mono);font-size:104px;line-height:1;font-weight:700;letter-spacing:-.04em;color:#f7f3ea}
+.big .unit{font-size:14px;color:#9fc3c9;margin-top:10px;letter-spacing:.08em}
+.big .stats{margin-top:30px;display:flex;flex-direction:column;gap:10px;font-size:12px;color:#b9c8cc}
+.big .stats .row{display:flex;justify-content:space-between;border-bottom:1px dotted rgba(255,255,255,.18);padding-bottom:8px}
+.big .stats b{color:#f0b46a;font-family:var(--mono);font-weight:600}
+@media(max-width:920px){.cover .inner{grid-template-columns:1fr;gap:36px;padding-top:56px}.cover h1{font-size:34px}.big{border-left:none;border-top:1px solid rgba(255,255,255,.14);padding-left:0;padding-top:28px}.big .num{font-size:76px}.cover-meta{grid-template-columns:repeat(2,1fr)}}
+
+/* section */
+section{padding:72px 0 0}
+.sec-head{display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:baseline;border-top:1px solid var(--line);padding-top:24px;margin-bottom:30px}
+.sec-no{font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:.08em}
+.sec-head h2{font-size:30px;line-height:1.3;font-weight:700}
+.sec-en{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-top:8px;font-family:var(--mono)}
+.lede{font-size:15.5px;color:var(--ink2);max-width:860px;margin-bottom:26px}
+.lede b{color:var(--teal)}
+
+/* findings */
+.findings{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.find{padding:26px 24px 28px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--card)}
+.find-no{font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:.1em;margin-bottom:12px}
+.find h3{font-size:16px;margin-bottom:10px}
+.find p{font-size:13.5px;color:var(--ink2);line-height:1.75}
+@media(max-width:900px){.findings{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.findings{grid-template-columns:1fr}}
+
+/* panels */
+.panel{background:var(--card);border:1px solid var(--line);padding:28px 30px;margin-bottom:22px;min-width:0}
+.panel h3{font-size:15px;margin-bottom:6px}
+.panel .ph{font-size:12px;color:var(--ink3);margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;min-width:0}
+.grid2>*,.grid3>*{min-width:0}
+@media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}}
+.chart{width:100%;height:360px}
+.chart.tall{height:420px}
+.chart.xl{height:480px}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:26px 0 30px}
+.kpi{padding:18px 16px 16px;border-right:1px solid var(--line2)}
+.kpi:last-child{border-right:none}
+.kpi .v{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--teal);letter-spacing:-.02em}
+.kpi .v small{font-size:12px;font-weight:600;color:var(--ink3);margin-left:2px}
+.kpi .l{font-size:11px;color:var(--ink3);margin-top:5px;letter-spacing:.04em}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}.kpi{border-bottom:1px solid var(--line2)}}
+@media(max-width:520px){.kpis{grid-template-columns:repeat(2,1fr)}}
+
+/* table */
+.tw{overflow-x:auto;border:1px solid var(--line);background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:560px}
+thead{background:#eee9dd}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line2);vertical-align:top}
+th{font-size:10.5px;letter-spacing:.06em;color:var(--ink2);font-weight:700;white-space:nowrap}
+tbody tr:hover td{background:#f7f3e9}
+tr:last-child td{border-bottom:none}
+.strong{color:var(--teal);font-weight:700}
+.rank-cell{color:var(--ink3);width:38px}
+.title-cell{min-width:260px;line-height:1.55}
+.author-cell{color:var(--ink2);font-size:12px;min-width:120px}
+.th-sub{font-weight:400;color:var(--ink3);letter-spacing:0}
+
+/* notes */
+.note{border-left:3px solid var(--amber);background:#fbf4e6;padding:16px 20px;font-size:12.5px;color:#6b4a22;margin:16px 0 0}
+.note b{color:#8a3f08}
+.note.teal{border-color:var(--teal);background:#eef3f2;color:#31585e}
+.note.teal b{color:#0b4a54}
+.caption{font-size:11.5px;color:var(--ink3);margin-top:10px;line-height:1.7}
+
+/* method list */
+.method{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.method h3{font-size:14px;margin-bottom:8px}
+.method p,.method li{font-size:13px;color:var(--ink2)}
+.method ul{padding-left:18px}
+.method li{margin-bottom:6px}
+.flow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 6px;font-family:var(--mono);font-size:12px}
+.flow .box{border:1px solid var(--line);padding:8px 12px;background:#faf7ef}
+.flow .arrow{color:var(--ink3)}
+.formula{font-family:var(--mono);font-size:11.5px;background:#f1eee4;border:1px solid var(--line2);padding:8px 10px;margin:8px 0;color:#33454d}
+
+/* conclusions */
+.concl{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.concl .panel{margin:0}
+.concl .panel .n{font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:.1em;margin-bottom:8px}
+.concl .panel p{font-size:13.5px;color:var(--ink2)}
+.limits{background:#101a20;color:#d8e2e4;padding:34px 36px;margin-top:22px}
+.limits h3{font-size:15px;color:#f0b46a;margin-bottom:14px;letter-spacing:.04em}
+.limits ul{padding-left:18px;columns:2;column-gap:36px}
+.limits li{font-size:12.5px;margin-bottom:10px;line-height:1.75;break-inside:avoid;color:#c5d4d7}
+.limits li b{color:#fff}
+@media(max-width:820px){.limits ul{columns:1}}
+
+footer{margin-top:72px;border-top:1px solid var(--line);padding:30px 0 50px;font-size:11.5px;color:var(--ink3)}
+footer .fgrid{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+footer a{color:var(--teal);text-decoration:none}
+footer a:hover{text-decoration:underline}
+.dl{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.dl a{font-family:var(--mono);font-size:11px;border:1px solid var(--line);padding:7px 10px;background:var(--card);color:var(--ink2)}
+.dl a:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
+
+@media print{.topbar,#progress,.nav{display:none}body{background:#fff}.cover{background:#fff;color:#000}.cover h1 em{color:#000}.find,.panel{break-inside:avoid}section{padding-top:36px}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="topbar"><div class="inner">
+  <div class="brand">ZQDB <span>·</span> 文献计量研究</div>
+  <nav class="nav">
+    <a href="#summary">摘要</a><a href="#method">方法</a><a href="#output">产出</a>
+    <a href="#funding">资助</a><a href="#collab">合作</a><a href="#topics">主题</a>
+    <a href="#impact">影响</a><a href="#inst">机构</a><a href="#conclusion">结论</a>
+  </nav>
+</div></div>
+
+<div class="cover">
+  <div class="inner">
+    <div>
+      <div class="kicker">CNKI · BIBLIOMETRICS · 2017—2026</div>
+      <h1 class="serif">《证券市场导报》<br>十年学术结构变迁<em>。</em></h1>
+      <p class="deck">以 902 篇正式论文为样本，从产出规模、基金资助、作者合作、主题演化与引用影响力五个维度，刻画一本中国资本市场核心期刊在注册制改革、数字化转型与 ESG 浪潮中的知识生产轨迹。</p>
+      <div class="cover-meta">
+        <div><div class="cm-label">样本</div><div class="cm-value">902 篇 / 2017–2026</div></div>
+        <div><div class="cm-label">数据快照</div><div class="cm-value">2026-10-30</div></div>
+        <div><div class="cm-label">2026 覆盖</div><div class="cm-value">第 01–10 期</div></div>
+        <div><div class="cm-label">累计被引</div><div class="cm-value">67,104 次</div></div>
+      </div>
+    </div>
+    <aside class="big">
+      <div class="num">902</div>
+      <div class="unit">篇正式研究论文</div>
+      <div class="stats">
+        <div class="row"><span>累计被引</span><b>67,104</b></div>
+        <div class="row"><span>h 指数</span><b>126</b></div>
+        <div class="row"><span>基金覆盖率</span><b>70.6%</b></div>
+        <div class="row"><span>篇均作者</span><b>1.79 → 2.76</b></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section id="summary">
+  <div class="sec-head"><div class="sec-no">00</div><div><h2 class="serif">核心发现</h2><div class="sec-en">Executive summary</div></div></div>
+  <p class="lede">十年数据并不支持“数量下降即质量上升”的简单叙事，也不支持“引用下降即影响力衰退”的直觉判断。真正发生的是<b>产出收缩、单篇增厚、引用集中、议题换轨</b>四重结构变化——它们彼此关联，但需要分开度量。</p>
+  <div class="findings"><article class='find'><div class='find-no'>01</div><h3>产出收缩，密度上升</h3><p>论文量由 2017 年 111 篇降至 2026 年前 10 期的 66 篇（年化约 79 篇）；同期有效篇均参考文献由 14.76 篇升至 38.95 篇，篇均作者由 1.79 人升至 2.76 人。规模让位于单篇厚度。</p></article><article class='find'><div class='find-no'>02</div><h3>双核资助，多基金叠加</h3><p>70.62% 的论文有基金标注。受资助论文中，国家自然科学基金覆盖 40.97%、国家社会科学基金 34.22%；49.92% 为两项及以上基金叠加。</p></article><article class='find'><div class='find-no'>03</div><h3>引用高度集中</h3><p>902 篇论文累计被引 67,104 次，h 指数 126。前 10% 论文（91 篇）吸收 52.25% 的引用；仅两篇 ESG 论文即占全部引用的 9.4%。</p></article><article class='find'><div class='find-no'>04</div><h3>引用速度的代际跃升</h3><p>按曝光年数校正后，2021–2022 年梯队年均被引 30.38 次，约为 2017–2018 年梯队（8.66 次）的 3.5 倍。这一跃升集中于 ESG 与数字化转型议题，而非全刊普遍提速。</p></article><article class='find'><div class='find-no'>05</div><h3>议题从“治理”转向“制度+技术”</h3><p>“信息披露”渗透率由 2017–2020 年的 4.35% 升至 2023–2026 年的 8.22%；“数字化转型”由 0 升至 3.29%，“注册制”由 1.21% 升至 3.29%；“公司治理”由 5.31% 降至 3.29%。</p></article><article class='find'><div class='find-no'>06</div><h3>财经院校与综合大学并立</h3><p>机构榜首为山东财经大学（44 篇，其中第一作者 39 篇）与武汉大学（42 篇），南开、人大、中山、北大紧随其后；深交所、中证金融研究院等市场机构亦进入前 25。</p></article></div>
+  <div class="note teal"><b>一句话结论：</b>《证券市场导报》正在从“广覆盖的资本市场综合刊物”转向“围绕制度变迁与技术冲击的深度研究平台”。其学术影响力并未整体衰减，而是以更高的集中度、更快的引用速度和更明确的政策议题聚焦来体现。</div>
+</section>
+
+<section id="method">
+  <div class="sec-head"><div class="sec-no">01</div><div><h2 class="serif">数据与方法</h2><div class="sec-en">Data &amp; methodology</div></div></div>
+  <p class="lede">所有指标由 CNKI 期刊导航与引文接口的全量抓取结果计算，未使用任何外部估算或人工填充。分析单位为“研究论文”，以是否含有关键词作为界定标准。</p>
+  <div class="grid2">
+    <div class="panel">
+      <h3>样本构建</h3>
+      <div class="flow"><span class="box">CNKI 原始条目 1,386</span><span class="arrow">→</span><span class="box">含关键词 902</span><span class="arrow">→</span><span class="box">指标计算</span></div>
+      <p style="font-size:13px;color:var(--ink2);margin-top:12px">剔除的 484 条为卷首语、目录、数据公告、会议动态等非研究条目。论文覆盖 2017–2026 年共 10 个年度；2026 年数据截至第 10 期（抓取日 2026-10-30），因此所有跨年比较均同时标注原始值与年化值。</p>
+      <h3 style="margin-top:18px">字段与清洗</h3>
+      <p style="font-size:13px;color:var(--ink2)">作者、机构、关键词、基金、摘要、被引数、下载数、参考文献数均逐篇解析。机构名称由 689 个原始写法归并为 420 个母体主体：含“大学”者截取至“大学”，中国社会科学院、中国科学院单独归并，交易所与研究院保留独立法人主体。</p>
+    </div>
+    <div class="panel">
+      <h3>关键指标定义</h3>
+      <div class="formula">基金覆盖率 = 有基金标注论文 / 当年论文</div>
+      <div class="formula">关键词渗透率 = 含该词论文 / 当年论文（非词频占比）</div>
+      <div class="formula">引用速度 = 被引次数 / 曝光年数（2026.83 − 发表年中）</div>
+      <div class="formula">h 指数：至多 h 篇论文至少被引 h 次</div>
+      <div class="formula">集中度：前 1%/10% 论文被引占总被引比例；基尼系数</div>
+      <p class="caption">引用速度为本文的核心校正指标。直接比较 2017 年与 2026 年的“篇均被引”会把引用累积时间差误读为质量差；按曝光年数折算后，才能比较不同年份论文的“被引速度”。即便如此，它仍受选题热度、CNKI 收录与引用习惯影响，不能等同于论文质量。</p>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:22px">
+    <h3>数据质量与处理记录</h3>
+    <div class="tw" style="margin-top:14px"><table><thead><tr><th>检查项</th><th>结果</th><th>处理方式</th></tr></thead><tbody>
+<tr><td>原始条目 / 论文样本</td><td class="mono">1386 / 902</td><td>以含关键词条目界定研究论文，剔除 484 条非论文条目</td></tr>
+<tr><td>缺失作者</td><td class="mono">0</td><td>保留，合作指标按实际作者列表计算</td></tr>
+<tr><td>缺失机构</td><td class="mono">4</td><td>不参与机构统计</td></tr>
+<tr><td>参考文献缺失/为 0</td><td class="mono">45（覆盖率 95.01%）</td><td>篇均参考文献仅对有效值计算</td></tr>
+<tr><td>机构名称去重</td><td class="mono">689 → 420</td><td>截取至“大学/中国社会科学院”等母体，保留交易所、研究院独立主体</td></tr>
+<tr><td>2026 年覆盖</td><td class="mono">第 01–10 期</td><td>年度对比标注为不完整年份，另给年化值</td></tr>
+</tbody></table></div>
+  </div>
+  <div class="note"><b>口径警告：</b>本报告是“单刊历时结构分析”，不含同类期刊对照组，也未做领域归一化。因此所有“影响力”判断均为刊物内部相对位置，不构成对期刊学术水平的绝对评价。</div>
+</section>
+
+<section id="output">
+  <div class="sec-head"><div class="sec-no">02</div><div><h2 class="serif">产出规模：收缩之后趋于稳定</h2><div class="sec-en">Output &amp; density</div></div></div>
+  <p class="lede">2017–2020 年，年发文量稳定在 99–111 篇；2021 年起开始收缩，2023–2025 年稳定在 78–80 篇。2026 年前 10 期发表 66 篇，按同期年化约 <b>79 篇</b>，与前三年的平台期基本一致——这说明收缩已经结束，而非持续下滑。</p>
+  <div class="kpis">
+    <div class="kpi"><div class="v">111<small>→66</small></div><div class="l">年发文量（2026 为 1–10 期）</div></div>
+    <div class="kpi"><div class="v">79</div><div class="l">2026 年化发文量</div></div>
+    <div class="kpi"><div class="v">+164%</div><div class="l">有效篇均参考文献（2017→2026）</div></div>
+    <div class="kpi"><div class="v">+54%</div><div class="l">篇均作者数（2017→2026）</div></div>
+    <div class="kpi"><div class="v">6.1%</div><div class="l">2026 年独著率（2017 为 45.1%）</div></div>
+    <div class="kpi"><div class="v">48.5%</div><div class="l">2026 年跨机构合作率</div></div>
+  </div>
+  <div class="grid2">
+    <div class="panel"><h3>年度发文量与 2026 年化值</h3><div class="ph">篇 / 年；2026 年以第 1–10 期折算</div><div id="c-output" class="chart"></div></div>
+    <div class="panel"><h3>论文密度与基金覆盖</h3><div class="ph">有效篇均参考文献（左轴）与基金覆盖率（右轴）</div><div id="c-density" class="chart"></div></div>
+  </div>
+  <div class="panel">
+    <h3>年度核心指标</h3>
+    <div class="tw" style="margin-top:14px"><table><thead><tr><th>年份</th><th>论文数</th><th>基金覆盖</th><th>独著率</th><th>篇均作者</th><th>有效篇均参考文献</th><th>篇均被引</th><th>引用速度<br><span class='th-sub'>次/曝光年</span></th></tr></thead><tbody><tr><td class='mono'>2017</td><td class='mono'>111</td><td class='mono'>59.46%</td><td class='mono'>45.05%</td><td class='mono'>1.79</td><td class='mono'>14.76</td><td class='mono'>77.41</td><td class='mono strong'>8.3</td></tr><tr><td class='mono'>2018</td><td class='mono'>104</td><td class='mono'>65.38%</td><td class='mono'>28.85%</td><td class='mono'>1.99</td><td class='mono'>16.41</td><td class='mono'>75.44</td><td class='mono strong'>9.06</td></tr><tr><td class='mono'>2019</td><td class='mono'>100</td><td class='mono'>64.0%</td><td class='mono'>33.0%</td><td class='mono'>2.13</td><td class='mono'>16.98</td><td class='mono'>75.21</td><td class='mono strong'>10.26</td></tr><tr><td class='mono'>2020</td><td class='mono'>99</td><td class='mono'>74.75%</td><td class='mono'>20.2%</td><td class='mono'>2.38</td><td class='mono'>19.8</td><td class='mono'>77.92</td><td class='mono strong'>12.31</td></tr><tr><td class='mono'>2021</td><td class='mono'>91</td><td class='mono'>74.73%</td><td class='mono'>21.98%</td><td class='mono'>2.21</td><td class='mono'>24.49</td><td class='mono'>156.27</td><td class='mono strong'>29.32</td></tr><tr><td class='mono'>2022</td><td class='mono'>93</td><td class='mono'>72.04%</td><td class='mono'>17.2%</td><td class='mono'>2.42</td><td class='mono'>29.98</td><td class='mono'>136.05</td><td class='mono strong'>31.42</td></tr><tr><td class='mono'>2023</td><td class='mono'>80</td><td class='mono'>72.5%</td><td class='mono'>15.0%</td><td class='mono'>2.48</td><td class='mono'>36.38</td><td class='mono'>63.16</td><td class='mono strong'>18.97</td></tr><tr><td class='mono'>2024</td><td class='mono'>80</td><td class='mono'>75.0%</td><td class='mono'>20.0%</td><td class='mono'>2.49</td><td class='mono'>35.61</td><td class='mono'>32.0</td><td class='mono strong'>13.73</td></tr><tr><td class='mono'>2025</td><td class='mono'>78</td><td class='mono'>80.77%</td><td class='mono'>8.97%</td><td class='mono'>2.59</td><td class='mono'>41.03</td><td class='mono'>10.65</td><td class='mono strong'>8.01</td></tr><tr><td class='mono'>2026（1–10期）</td><td class='mono'>66</td><td class='mono'>74.24%</td><td class='mono'>6.06%</td><td class='mono'>2.76</td><td class='mono'>38.95</td><td class='mono'>1.71</td><td class='mono strong'>3.42</td></tr></tbody></table></div>
+    <p class="caption">“有效篇均参考文献”仅统计参考文献数大于 0 的论文，以剔除接口缺失；各年覆盖率见方法部分。2026 年为第 1–10 期，引用与下载仍处于累积早期。</p>
+  </div>
+</section>
+
+<section id="funding">
+  <div class="sec-head"><div class="sec-no">03</div><div><h2 class="serif">基金资助：双核结构与非国字号力量</h2><div class="sec-en">Funding landscape</div></div></div>
+  <p class="lede">基金覆盖率由 2017 年的 59.5% 升至 2025 年的 80.8%，2026 年前 10 期为 74.2%。国家自然科学基金与国家社会科学基金构成双核，但省部级基金、教育部项目与校级专项同样不可忽视；受资助论文中近一半存在多基金叠加。</p>
+  <div class="grid2">
+    <div class="panel"><h3>资助类型覆盖（受资助论文 = 100%）</h3><div class="ph">一篇论文可标注多项基金，故合计大于 100%</div><div id="c-fund" class="chart tall"></div></div>
+    <div class="panel"><h3>基金覆盖率的年度变化</h3><div class="ph">有基金标注论文占当年论文比例</div><div id="c-fund-rate" class="chart tall"></div></div>
+  </div>
+  <div class="note teal"><b>结构解读：</b>国家自然科学基金覆盖 41.0%、国家社科基金覆盖 34.2%，两者并非互斥；省部级基金（17.3%）、教育部项目（15.1%）与校级专项（14.3%）合计构成重要的“中层支撑”。49.9% 的多基金叠加率说明，高质量实证研究越来越依赖组合式资助，而非单一项目。</div>
+  <p class="caption">“其他/未归类”占 27.2%，主要为零散部委课题、地方专项与无法可靠归并的基金名称；该比例已在图中单独标识，未并入任何一类。</p>
+</section>
+
+<section id="collab">
+  <div class="sec-head"><div class="sec-no">04</div><div><h2 class="serif">作者合作：从个体思辨到团队实证</h2><div class="sec-en">Collaboration</div></div></div>
+  <p class="lede">独著率由 2017 年的 45.1% 降至 2026 年的 6.1%，篇均作者由 1.79 人升至 2.76 人，跨机构合作率由 26.1% 升至 48.5%。三条曲线同向变化，表明合作已从“可选策略”变为“默认生产组织形式”。</p>
+  <div class="grid2">
+    <div class="panel"><h3>独著 / 合著结构与篇均作者</h3><div class="ph">柱：论文数；线：篇均作者数</div><div id="c-coop" class="chart"></div></div>
+    <div class="panel"><h3>跨机构合作率</h3><div class="ph">作者单位归并后，含 2 个及以上不同机构的论文占比</div><div id="c-cross" class="chart"></div></div>
+  </div>
+  <div class="grid2" style="margin-top:22px">
+    <div class="panel"><h3>合作规模分布（全样本）</h3><div class="ph">每篇论文的作者人数分布</div><div id="c-team" class="chart"></div></div>
+    <div class="panel"><h3>高产作者（发文 ≥3 篇）</h3><div class="tw"><table><thead><tr><th>#</th><th>作者</th><th>发文数</th></tr></thead><tbody><tr><td class='mono rank-cell'>01</td><td>张雪莹</td><td class='mono strong'>11</td></tr><tr><td class='mono rank-cell'>02</td><td>陈作华</td><td class='mono strong'>8</td></tr><tr><td class='mono rank-cell'>03</td><td>李青原</td><td class='mono strong'>8</td></tr><tr><td class='mono rank-cell'>04</td><td>张宗新</td><td class='mono strong'>8</td></tr><tr><td class='mono rank-cell'>05</td><td>顾海峰</td><td class='mono strong'>8</td></tr><tr><td class='mono rank-cell'>06</td><td>郑志刚</td><td class='mono strong'>7</td></tr><tr><td class='mono rank-cell'>07</td><td>楼秋然</td><td class='mono strong'>6</td></tr><tr><td class='mono rank-cell'>08</td><td>肖作平</td><td class='mono strong'>6</td></tr><tr><td class='mono rank-cell'>09</td><td>刘娥平</td><td class='mono strong'>6</td></tr><tr><td class='mono rank-cell'>10</td><td>陈小辉</td><td class='mono strong'>6</td></tr><tr><td class='mono rank-cell'>11</td><td>李湛</td><td class='mono strong'>5</td></tr><tr><td class='mono rank-cell'>12</td><td>习明明</td><td class='mono strong'>5</td></tr><tr><td class='mono rank-cell'>13</td><td>关静怡</td><td class='mono strong'>5</td></tr><tr><td class='mono rank-cell'>14</td><td>张红伟</td><td class='mono strong'>5</td></tr><tr><td class='mono rank-cell'>15</td><td>陈娇娇</td><td class='mono strong'>5</td></tr></tbody></table></div><p class="caption">按全样本发文数排序；未做同名消歧，仅作结构性参考。</p></div>
+  </div>
+  <div class="note"><b>需要谨慎的推论：</b>合作化与实证化高度相关，但不能据此断言“合著论文质量更高”。本数据中合著率与参考文献密度同步上升，说明研究分工与文献工作量在增加；因果方向仍需借助全文方法信息才能识别。</div>
+</section>
+
+<section id="topics">
+  <div class="sec-head"><div class="sec-no">05</div><div><h2 class="serif">主题演化：制度与技术双重牵引</h2><div class="sec-en">Topic evolution</div></div></div>
+  <p class="lede">以“含该关键词的论文占比”而非词频衡量热度，可以避免长文摘要对结果的干扰。十年间，“信息披露”与“公司治理”始终位居前列；2021 年后，“数字化转型”“注册制”快速渗透，“公司治理”的相对热度则出现回落。</p>
+  <div class="panel"><h3>高频关键词的论文渗透率（全样本）</h3><div class="ph">含该关键词的论文数 / 902 篇</div><div id="c-kw" class="chart xl"></div></div>
+  <div class="panel"><h3>TOP 12 关键词的年度渗透率</h3><div class="ph">单元格为当年含该词论文占比（%），已消除各年发文量差异</div><div id="c-heat" class="chart xl"></div></div>
+  <div class="grid2">
+    <div class="panel"><h3>六大主题的年度覆盖</h3><div class="ph">按关键词词典归类，一篇论文可归入多个主题（%）</div><div id="c-theme" class="chart tall"></div></div>
+    <div class="panel"><h3>主题迁移：2017–2020 vs 2023–2026</h3>
+      <div class="tw"><table><thead><tr><th>关键词</th><th>早期渗透率</th><th>近期渗透率</th><th>变化</th></tr></thead><tbody>
+      <tr><td>信息披露</td><td class='mono'>4.35%</td><td class='mono strong'>8.22%</td><td class='mono' style='color:#0b5d6b'>+3.87pp</td></tr><tr><td>数字化转型</td><td class='mono'>0.0%</td><td class='mono strong'>3.29%</td><td class='mono' style='color:#0b5d6b'>+3.29pp</td></tr><tr><td>注册制</td><td class='mono'>1.21%</td><td class='mono strong'>3.29%</td><td class='mono' style='color:#0b5d6b'>+2.08pp</td></tr><tr><td>公司治理</td><td class='mono'>5.31%</td><td class='mono strong'>3.29%</td><td class='mono' style='color:#9a3412'>-2.02pp</td></tr>
+      </tbody></table></div>
+      <p class="caption">仅列示论文数 ≥6 且渗透率变化 ≥2 个百分点的词；早期样本 414 篇，近期样本 304 篇。</p>
+    </div>
+  </div>
+  <div class="note teal"><b>议题判断：</b>“信息披露”的上升并非传统主题回归，而是与注册制、ESG 披露、数字化披露等新制度场景结合后的再定义；“公司治理”的下降更可能是议题分散化——并购、股权质押、机构投资者等子议题吸收了原本集中于“公司治理”的标签。</div>
+</section>
+
+<section id="impact">
+  <div class="sec-head"><div class="sec-no">06</div><div><h2 class="serif">引用影响力：高集中度与快速度</h2><div class="sec-en">Citation impact</div></div></div>
+  <p class="lede">902 篇论文累计被引 67,104 次，h 指数 126，中位数 32.5 次。引用分布高度不均：前 10% 论文吸收 52.3% 的引用，前 1%（10 篇）吸收 20.2%；172 篇论文被引 ≥100 次，合计占全部引用的 67.2%。</p>
+  <div class="kpis">
+    <div class="kpi"><div class="v">67,104</div><div class="l">累计被引</div></div>
+    <div class="kpi"><div class="v">126</div><div class="l">h 指数</div></div>
+    <div class="kpi"><div class="v">0.662</div><div class="l">被引基尼系数</div></div>
+    <div class="kpi"><div class="v">52.3%</div><div class="l">前 10% 论文引用占比</div></div>
+    <div class="kpi"><div class="v">32.5</div><div class="l">单篇被引中位数</div></div>
+    <div class="kpi"><div class="v">5.0%</div><div class="l">零被引论文占比</div></div>
+  </div>
+  <div class="grid2">
+    <div class="panel"><h3>分梯队引用速度（按曝光年数校正）</h3><div class="ph">次 / 曝光年；括号内为平均曝光年数</div><div id="c-cohort" class="chart"></div></div>
+    <div class="panel"><h3>被引洛伦兹曲线</h3><div class="ph">横轴：论文累计占比（按被引从低到高）；纵轴：被引累计占比</div><div id="c-lorenz" class="chart"></div></div>
+  </div>
+  <div class="note"><b>如何正确阅读“引用跃升”：</b>2021–2022 年梯队年均被引 30.4 次，显著高于 2017–2018 年的 8.7 次。但这一跃升主要由两篇 ESG 论文（合计 6,337 次，占全部引用 9.4%）与数字化转型议题拉动。若剔除前 1% 论文，代际差距会明显收窄——因此它更像“头部论文的选题红利”，而非全刊影响力的普遍提升。</div>
+  <div class="panel" style="margin-top:22px">
+    <h3>被引 TOP 20</h3>
+    <div class="ph">被引数为 2026-10-30 快照；“次/年”按曝光年数折算</div>
+    <div class="tw"><table><thead><tr><th>#</th><th>论文题目</th><th>年份</th><th>作者</th><th>被引</th><th>次/年</th><th>下载</th><th>参考文献</th></tr></thead><tbody><tr><td class='mono rank-cell'>01</td><td class='title-cell'>ESG表现对企业价值的影响机制研究</td><td class='mono'>2022</td><td class='author-cell'>王琳璘、廉永辉、董捷</td><td class='mono strong'>3413</td><td class='mono'>788.2</td><td class='mono'>86,951</td><td class='mono'>28</td></tr><tr><td class='mono rank-cell'>02</td><td class='title-cell'>ESG表现能改善企业投资效率吗？</td><td class='mono'>2021</td><td class='author-cell'>高杰英、褚冬晓、廉永辉 等</td><td class='mono strong'>2924</td><td class='mono'>548.6</td><td class='mono'>63,940</td><td class='mono'>42</td></tr><tr><td class='mono rank-cell'>03</td><td class='title-cell'>企业数字化转型的业绩驱动效应研究</td><td class='mono'>2021</td><td class='author-cell'>易露霞、吴非、徐斯旸</td><td class='mono strong'>1376</td><td class='mono'>258.2</td><td class='mono'>20,785</td><td class='mono'>36</td></tr><tr><td class='mono rank-cell'>04</td><td class='title-cell'>上市公司并购重组商誉及其减值问题探析</td><td class='mono'>2017</td><td class='author-cell'>高榴、袁诗淼</td><td class='mono strong'>1032</td><td class='mono'>110.6</td><td class='mono'>14,560</td><td class='mono'>12</td></tr><tr><td class='mono rank-cell'>05</td><td class='title-cell'>中概股私有化与分拆回归A股的特点与影响分析</td><td class='mono'>2017</td><td class='author-cell'>李杲</td><td class='mono strong'>904</td><td class='mono'>96.9</td><td class='mono'>5,079</td><td class='mono'>—</td></tr><tr><td class='mono rank-cell'>06</td><td class='title-cell'>企业数字化转型会降低债务违约风险吗？</td><td class='mono'>2022</td><td class='author-cell'>王守海、徐晓彤、刘烨炜</td><td class='mono strong'>902</td><td class='mono'>208.3</td><td class='mono'>20,589</td><td class='mono'>40</td></tr><tr><td class='mono rank-cell'>07</td><td class='title-cell'>并购商誉减值、信息不对称与股价崩盘风险</td><td class='mono'>2019</td><td class='author-cell'>韩宏稳、唐清泉、黎文飞</td><td class='mono strong'>809</td><td class='mono'>110.4</td><td class='mono'>12,562</td><td class='mono'>28</td></tr><tr><td class='mono rank-cell'>08</td><td class='title-cell'>绿色债券能缓解企业“短融长投”吗？——来自债券市场的经验证据</td><td class='mono'>2021</td><td class='author-cell'>宁金辉、王敏</td><td class='mono strong'>786</td><td class='mono'>147.5</td><td class='mono'>12,023</td><td class='mono'>28</td></tr><tr><td class='mono rank-cell'>09</td><td class='title-cell'>我国A股市场ESG风险溢价与额外收益研究</td><td class='mono'>2021</td><td class='author-cell'>李瑾</td><td class='mono strong'>739</td><td class='mono'>138.6</td><td class='mono'>13,907</td><td class='mono'>15</td></tr><tr><td class='mono rank-cell'>10</td><td class='title-cell'>数字经济发展对企业生产率增长的影响机制研究</td><td class='mono'>2021</td><td class='author-cell'>杜传忠、张远</td><td class='mono strong'>674</td><td class='mono'>126.5</td><td class='mono'>11,637</td><td class='mono'>32</td></tr><tr><td class='mono rank-cell'>11</td><td class='title-cell'>业绩承诺增长率、并购溢价与股价崩盘风险</td><td class='mono'>2019</td><td class='author-cell'>关静怡、刘娥平</td><td class='mono strong'>639</td><td class='mono'>87.2</td><td class='mono'>5,710</td><td class='mono'>30</td></tr><tr><td class='mono rank-cell'>12</td><td class='title-cell'>环保费改税对企业绿色信息披露的影响研究</td><td class='mono'>2021</td><td class='author-cell'>孔东民、韦咏曦、季绵绵</td><td class='mono strong'>578</td><td class='mono'>108.4</td><td class='mono'>16,270</td><td class='mono'>31</td></tr><tr><td class='mono rank-cell'>13</td><td class='title-cell'>数字经济如何影响产业结构水平？</td><td class='mono'>2020</td><td class='author-cell'>陈小辉、张红伟、吴永超</td><td class='mono strong'>566</td><td class='mono'>89.4</td><td class='mono'>12,791</td><td class='mono'>46</td></tr><tr><td class='mono rank-cell'>14</td><td class='title-cell'>并购业绩补偿承诺与商誉减值研究</td><td class='mono'>2020</td><td class='author-cell'>张海晴、文雯、宋建波</td><td class='mono strong'>531</td><td class='mono'>83.9</td><td class='mono'>5,667</td><td class='mono'>23</td></tr><tr><td class='mono rank-cell'>15</td><td class='title-cell'>共同机构投资者如何影响企业ESG表现？</td><td class='mono'>2023</td><td class='author-cell'>何青、庄朋涛</td><td class='mono strong'>531</td><td class='mono'>159.5</td><td class='mono'>11,773</td><td class='mono'>27</td></tr><tr><td class='mono rank-cell'>16</td><td class='title-cell'>绿色债券发行能引发市场良性反应吗？——兼论“双碳”目标的政策激励效应</td><td class='mono'>2022</td><td class='author-cell'>陈奉功、张谊浩</td><td class='mono strong'>497</td><td class='mono'>114.8</td><td class='mono'>7,628</td><td class='mono'>33</td></tr><tr><td class='mono rank-cell'>17</td><td class='title-cell'>深市重大资产重组业绩承诺及商誉情况分析</td><td class='mono'>2017</td><td class='author-cell'>张冀</td><td class='mono strong'>461</td><td class='mono'>49.4</td><td class='mono'>4,026</td><td class='mono'>—</td></tr><tr><td class='mono rank-cell'>18</td><td class='title-cell'>商誉会计准则:存在的问题与改进建议</td><td class='mono'>2018</td><td class='author-cell'>李玉菊</td><td class='mono strong'>435</td><td class='mono'>52.2</td><td class='mono'>6,546</td><td class='mono'>25</td></tr><tr><td class='mono rank-cell'>19</td><td class='title-cell'>数字经济发展赋能共同富裕：影响效应与作用机制</td><td class='mono'>2022</td><td class='author-cell'>向云、陆倩、李芷萱</td><td class='mono strong'>413</td><td class='mono'>95.4</td><td class='mono'>18,285</td><td class='mono'>38</td></tr><tr><td class='mono rank-cell'>20</td><td class='title-cell'>ESG表现影响客户关系稳定度吗？</td><td class='mono'>2023</td><td class='author-cell'>陈娇娇、丁合煜、张雪梅</td><td class='mono strong'>406</td><td class='mono'>121.9</td><td class='mono'>11,510</td><td class='mono'>38</td></tr></tbody></table></div>
+    <p class="caption">被引与下载的 Spearman 秩相关系数为 0.784，说明“受关注”与“被引用”高度相关，但下载量更高的论文未必进入被引前列；两者不能互相替代。</p>
+  </div>
+</section>
+
+<section id="inst">
+  <div class="sec-head"><div class="sec-no">07</div><div><h2 class="serif">机构格局：财经院校的实证崛起</h2><div class="sec-en">Institutional landscape</div></div></div>
+  <p class="lede">将 689 个原始单位名称归并为 420 个母体后，山东财经大学以 44 篇参与论文（39 篇第一作者）居首，武汉大学 42 篇紧随；南开、人大、中山、北大、复旦构成第二梯队。专业性财经院校与综合大学并立，是这本期刊作者结构的显著特征。</p>
+  <div class="panel"><h3>发文机构 TOP 20（母体归并）</h3><div class="ph">深色为第一作者单位论文，浅色为合作参与论文</div><div id="c-inst" class="chart xl"></div></div>
+  <div class="grid2">
+    <div class="panel"><h3>机构贡献明细 TOP 15</h3><div class="tw"><table><thead><tr><th>#</th><th>机构（母体归并）</th><th>参与论文</th><th>第一作者论文</th><th>折算贡献</th></tr></thead><tbody><tr><td class='mono rank-cell'>01</td><td>山东财经大学</td><td class='mono strong'>44</td><td class='mono'>39</td><td class='mono'>34.5</td></tr><tr><td class='mono rank-cell'>02</td><td>武汉大学</td><td class='mono strong'>42</td><td class='mono'>34</td><td class='mono'>33.8</td></tr><tr><td class='mono rank-cell'>03</td><td>南开大学</td><td class='mono strong'>35</td><td class='mono'>27</td><td class='mono'>22.2</td></tr><tr><td class='mono rank-cell'>04</td><td>中国人民大学</td><td class='mono strong'>33</td><td class='mono'>30</td><td class='mono'>24.1</td></tr><tr><td class='mono rank-cell'>05</td><td>中山大学</td><td class='mono strong'>33</td><td class='mono'>16</td><td class='mono'>17.8</td></tr><tr><td class='mono rank-cell'>06</td><td>北京大学</td><td class='mono strong'>30</td><td class='mono'>24</td><td class='mono'>23.2</td></tr><tr><td class='mono rank-cell'>07</td><td>复旦大学</td><td class='mono strong'>27</td><td class='mono'>18</td><td class='mono'>19.3</td></tr><tr><td class='mono rank-cell'>08</td><td>东北财经大学</td><td class='mono strong'>26</td><td class='mono'>22</td><td class='mono'>19.5</td></tr><tr><td class='mono rank-cell'>09</td><td>对外经济贸易大学</td><td class='mono strong'>26</td><td class='mono'>22</td><td class='mono'>19.3</td></tr><tr><td class='mono rank-cell'>10</td><td>天津财经大学</td><td class='mono strong'>25</td><td class='mono'>25</td><td class='mono'>21.5</td></tr><tr><td class='mono rank-cell'>11</td><td>南京大学</td><td class='mono strong'>25</td><td class='mono'>23</td><td class='mono'>18.3</td></tr><tr><td class='mono rank-cell'>12</td><td>中南财经政法大学</td><td class='mono strong'>24</td><td class='mono'>16</td><td class='mono'>16.0</td></tr><tr><td class='mono rank-cell'>13</td><td>华南理工大学</td><td class='mono strong'>23</td><td class='mono'>19</td><td class='mono'>16.2</td></tr><tr><td class='mono rank-cell'>14</td><td>江西财经大学</td><td class='mono strong'>23</td><td class='mono'>18</td><td class='mono'>19.9</td></tr><tr><td class='mono rank-cell'>15</td><td>上海财经大学</td><td class='mono strong'>20</td><td class='mono'>8</td><td class='mono'>11.9</td></tr></tbody></table></div>
+      <p class="caption">“折算贡献”按论文机构数均分（1/n）后加总，用于缓解合作署名带来的规模高估。</p></div>
+    <div class="panel"><h3>结构观察</h3>
+      <p style="font-size:13.5px;color:var(--ink2)">头部机构的第一作者占比差异明显：天津财经大学 25/25、山东财经大学 39/44、中国人民大学 30/33，显示其以主导型合作进入；中山大学 16/33、上海财经大学 8/20，则更多以合作者身份出现。</p>
+      <p style="font-size:13.5px;color:var(--ink2);margin-top:10px">深圳证券交易所（14 篇）、中证金融研究院（13 篇）进入前 25，说明市场基础设施与政策研究机构已成为期刊知识生产的一部分；这与刊物“资本市场制度研究”的定位一致。</p>
+      <p class="caption">机构归并规则见方法部分。归并可能把同一大学的不同学院合并，从而高估其规模；折算贡献与第一作者口径可部分校正。</p>
+    </div>
+  </div>
+</section>
+
+<section id="conclusion">
+  <div class="sec-head"><div class="sec-no">08</div><div><h2 class="serif">结论与局限</h2><div class="sec-en">Conclusions &amp; limitations</div></div></div>
+  <div class="concl">
+    <div class="panel"><div class="n">判断一</div><h3>收缩是定位调整，不是衰退</h3><p>年发文量从 111 篇降至约 79 篇后进入平台期，同时篇均参考文献、篇均作者与基金覆盖率上升。期刊在用更少的版面承载更重的研究，而非简单缩减规模。</p></div>
+    <div class="panel"><div class="n">判断二</div><h3>影响力以集中度换广度</h3><p>h 指数 126 与基尼系数 0.662 同时成立：头部论文具备跨刊影响力，但中位论文的被引积累有限。期刊的学术声誉更多由少数高被引论文支撑，长尾影响力有待提升。</p></div>
+    <div class="panel"><div class="n">判断三</div><h3>议题由“治理”转向“制度+技术”</h3><p>信息披露、注册制、数字化转型的渗透率上升，公司治理标签相对下降。研究重心正从企业内部治理机制，转向外部制度变迁与技术冲击下的市场运行。</p></div>
+    <div class="panel"><div class="n">判断四</div><h3>合作网络替代个体写作</h3><p>独著率降至 6.1%，跨机构合作率接近一半。金融研究的生产函数已变为“数据 + 计量 + 团队”，这对青年学者的合作网络与数据能力提出更高要求。</p></div>
+  </div>
+  <div class="limits">
+    <h3>研究局限与使用边界</h3>
+    <ul>
+      <li><b>单刊设计：</b>没有同类期刊对照组，无法判断上述变化是《证券市场导报》独有，还是金融学期刊的普遍趋势。</li>
+      <li><b>未做领域归一化：</b>被引数未按学科、年份、文献类型归一化，不能直接与其它期刊或作者比较。</li>
+      <li><b>快照偏差：</b>被引、下载为 2026-10-30 的实时值；2025–2026 年论文仍处引用累积早期，跨年比较必须使用“次/曝光年”。</li>
+      <li><b>2026 年不完整：</b>仅覆盖第 1–10 期，所有年度结论均以年化值或占比形式呈现，未把 66 篇直接当作全年产量。</li>
+      <li><b>关键词口径：</b>主题分析依赖作者关键词，编辑部标引差异与关键词缺失会影响渗透率；主题词典为人工设定，存在归类主观性。</li>
+      <li><b>机构归并误差：</b>689→420 的归并可能合并同名不同实体，或误并独立学院；第一作者与折算贡献两种口径可部分缓解。</li>
+      <li><b>基金未归类：</b>27.2% 的受资助论文含无法可靠归类的基金名称，已单列而非强行分配。</li>
+      <li><b>因果限制：</b>合作化、实证化、引用跃升之间为相关关系；本报告不主张任何单向因果。</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="fgrid">
+    <div>
+      <div class="mono" style="letter-spacing:.12em;color:var(--ink2)">DATA &amp; REPRODUCIBILITY</div>
+      <p style="margin-top:8px;max-width:520px">数据源自中国知网（CNKI）期刊导航与引文接口，抓取日 2026-10-30。样本、清洗脚本与汇总数据随报告一并公开，便于复核与更新。</p>
+      <div class="dl">
+        <a href="data/papers.csv">论文全量数据 CSV</a>
+        <a href="data/yearly.csv">年度指标 CSV</a>
+        <a href="data/keywords.csv">关键词汇总 CSV</a>
+        <a href="data/institutions.csv">机构汇总 CSV</a>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div class="mono" style="letter-spacing:.12em;color:var(--ink2)">PUBLISHED VIA GITHUB PAGES</div>
+      <p style="margin-top:8px"><a href="https://github.com/farahtony727/zqdb-bibliometrics-2017-2026">github.com/farahtony727/zqdb-bibliometrics-2017-2026</a></p>
+      <p style="margin-top:6px">© 2026 · 仅供研究参考</p>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+const D = {"yearly": [{"year": 2017, "papers": 111, "fund_rate": 59.46, "multi_fund_rate": 30.63, "solo_rate": 45.05, "cross_inst_rate": 26.13, "avg_authors": 1.79, "avg_refs": 14.76, "ref_coverage": 88.29, "avg_cited": 77.41, "median_cited": 43, "avg_cites_per_year": 8.3, "avg_dl": 1478.13, "median_dl": 979}, {"year": 2018, "papers": 104, "fund_rate": 65.38, "multi_fund_rate": 39.42, "solo_rate": 28.85, "cross_inst_rate": 35.58, "avg_authors": 1.99, "avg_refs": 16.41, "ref_coverage": 97.12, "avg_cited": 75.44, "median_cited": 48.5, "avg_cites_per_year": 9.06, "avg_dl": 1506.83, "median_dl": 1218.5}, {"year": 2019, "papers": 100, "fund_rate": 64.0, "multi_fund_rate": 31.0, "solo_rate": 33.0, "cross_inst_rate": 33.0, "avg_authors": 2.13, "avg_refs": 16.98, "ref_coverage": 97.0, "avg_cited": 75.21, "median_cited": 39.0, "avg_cites_per_year": 10.26, "avg_dl": 1564.25, "median_dl": 1213.0}, {"year": 2020, "papers": 99, "fund_rate": 74.75, "multi_fund_rate": 37.37, "solo_rate": 20.2, "cross_inst_rate": 42.42, "avg_authors": 2.38, "avg_refs": 19.8, "ref_coverage": 93.94, "avg_cited": 77.92, "median_cited": 51, "avg_cites_per_year": 12.31, "avg_dl": 1936.28, "median_dl": 1441}, {"year": 2021, "papers": 91, "fund_rate": 74.73, "multi_fund_rate": 38.46, "solo_rate": 21.98, "cross_inst_rate": 32.97, "avg_authors": 2.21, "avg_refs": 24.49, "ref_coverage": 98.9, "avg_cited": 156.27, "median_cited": 60, "avg_cites_per_year": 29.32, "avg_dl": 3807.3, "median_dl": 2087}, {"year": 2022, "papers": 93, "fund_rate": 72.04, "multi_fund_rate": 36.56, "solo_rate": 17.2, "cross_inst_rate": 35.48, "avg_authors": 2.42, "avg_refs": 29.98, "ref_coverage": 88.17, "avg_cited": 136.05, "median_cited": 62, "avg_cites_per_year": 31.42, "avg_dl": 4286.54, "median_dl": 2397}, {"year": 2023, "papers": 80, "fund_rate": 72.5, "multi_fund_rate": 38.75, "solo_rate": 15.0, "cross_inst_rate": 45.0, "avg_authors": 2.48, "avg_refs": 36.38, "ref_coverage": 98.75, "avg_cited": 63.16, "median_cited": 35.0, "avg_cites_per_year": 18.97, "avg_dl": 2771.69, "median_dl": 1760.5}, {"year": 2024, "papers": 80, "fund_rate": 75.0, "multi_fund_rate": 31.25, "solo_rate": 20.0, "cross_inst_rate": 38.75, "avg_authors": 2.49, "avg_refs": 35.61, "ref_coverage": 98.75, "avg_cited": 32.0, "median_cited": 22.0, "avg_cites_per_year": 13.73, "avg_dl": 2362.03, "median_dl": 1740.5}, {"year": 2025, "papers": 78, "fund_rate": 80.77, "multi_fund_rate": 34.62, "solo_rate": 8.97, "cross_inst_rate": 41.03, "avg_authors": 2.59, "avg_refs": 41.03, "ref_coverage": 100.0, "avg_cited": 10.65, "median_cited": 5.5, "avg_cites_per_year": 8.01, "avg_dl": 1770.72, "median_dl": 1104.0}, {"year": 2026, "papers": 66, "fund_rate": 74.24, "multi_fund_rate": 34.85, "solo_rate": 6.06, "cross_inst_rate": 48.48, "avg_authors": 2.76, "avg_refs": 38.95, "ref_coverage": 90.91, "avg_cited": 1.71, "median_cited": 0.0, "avg_cites_per_year": 3.42, "avg_dl": 724.48, "median_dl": 547.5}], "fund": {"funded_papers": 637, "coverage": 70.62, "multi_fund_rate": 49.92, "items": 1151, "categories": [{"name": "国家自然科学基金", "papers": 261, "pct_of_funded": 40.97}, {"name": "国家社会科学基金", "papers": 218, "pct_of_funded": 34.22}, {"name": "其他/未归类", "papers": 173, "pct_of_funded": 27.16}, {"name": "省部级社科/自科基金", "papers": 110, "pct_of_funded": 17.27}, {"name": "教育部项目", "papers": 96, "pct_of_funded": 15.07}, {"name": "校级/高校专项", "papers": 91, "pct_of_funded": 14.29}, {"name": "中央高校基本科研业务费", "papers": 46, "pct_of_funded": 7.22}, {"name": "学会/协会资助", "papers": 43, "pct_of_funded": 6.75}, {"name": "博士后基金", "papers": 31, "pct_of_funded": 4.87}, {"name": "其他部委/国家级项目", "papers": 11, "pct_of_funded": 1.73}]}, "cohorts": [{"cohort": "2017–2018", "n": 215, "avg_cited": 76.46, "median": 45, "avg_cpy": 8.66, "exposure": 8.8, "zero_rate": 0.47}, {"cohort": "2019–2020", "n": 199, "avg_cited": 76.56, "median": 45, "avg_cpy": 11.28, "exposure": 6.8, "zero_rate": 0.5}, {"cohort": "2021–2022", "n": 184, "avg_cited": 146.05, "median": 62.0, "avg_cpy": 30.38, "exposure": 4.8, "zero_rate": 0.0}, {"cohort": "2023–2024", "n": 160, "avg_cited": 47.58, "median": 28.5, "avg_cpy": 16.35, "exposure": 2.8, "zero_rate": 0.0}, {"cohort": "2025–2026", "n": 144, "avg_cited": 6.56, "median": 2.0, "avg_cpy": 5.91, "exposure": 0.9, "zero_rate": 29.86}], "kw": {"top": [{"name": "信息披露", "papers": 54, "penetration": 5.99}, {"name": "公司治理", "papers": 51, "penetration": 5.65}, {"name": "融资约束", "papers": 33, "penetration": 3.66}, {"name": "信息不对称", "papers": 29, "penetration": 3.22}, {"name": "并购重组", "papers": 20, "penetration": 2.22}, {"name": "机构投资者", "papers": 20, "penetration": 2.22}, {"name": "上市公司", "papers": 19, "penetration": 2.11}, {"name": "注册制", "papers": 19, "penetration": 2.11}, {"name": "数字化转型", "papers": 19, "penetration": 2.11}, {"name": "投资者保护", "papers": 18, "penetration": 2.0}, {"name": "证券监管", "papers": 16, "penetration": 1.77}, {"name": "数字经济", "papers": 16, "penetration": 1.77}, {"name": "内幕交易", "papers": 15, "penetration": 1.66}, {"name": "虚假陈述", "papers": 15, "penetration": 1.66}, {"name": "金融监管", "papers": 13, "penetration": 1.44}, {"name": "盈余管理", "papers": 13, "penetration": 1.44}, {"name": "金融科技", "papers": 13, "penetration": 1.44}, {"name": "信息透明度", "papers": 13, "penetration": 1.44}, {"name": "商誉减值", "papers": 12, "penetration": 1.33}, {"name": "国有企业", "papers": 11, "penetration": 1.22}, {"name": "溢出效应", "papers": 11, "penetration": 1.22}, {"name": "代理成本", "papers": 11, "penetration": 1.22}, {"name": "资产证券化", "papers": 10, "penetration": 1.11}, {"name": "投资效率", "papers": 10, "penetration": 1.11}, {"name": "股票流动性", "papers": 10, "penetration": 1.11}], "heatmap": {"years": [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "keywords": ["信息披露", "公司治理", "融资约束", "信息不对称", "并购重组", "机构投资者", "上市公司", "注册制", "数字化转型", "投资者保护", "证券监管", "数字经济"], "rows": [{"year": 2017, "信息披露": 1.8, "公司治理": 5.41, "融资约束": 0.9, "信息不对称": 0.9, "并购重组": 4.5, "机构投资者": 0.9, "上市公司": 2.7, "注册制": 0.0, "数字化转型": 0.0, "投资者保护": 1.8, "证券监管": 1.8, "数字经济": 0.0}, {"year": 2018, "信息披露": 6.73, "公司治理": 6.73, "融资约束": 5.77, "信息不对称": 3.85, "并购重组": 3.85, "机构投资者": 0.96, "上市公司": 4.81, "注册制": 0.0, "数字化转型": 0.0, "投资者保护": 2.88, "证券监管": 0.96, "数字经济": 0.0}, {"year": 2019, "信息披露": 3.0, "公司治理": 6.0, "融资约束": 2.0, "信息不对称": 4.0, "并购重组": 2.0, "机构投资者": 2.0, "上市公司": 1.0, "注册制": 2.0, "数字化转型": 0.0, "投资者保护": 0.0, "证券监管": 3.0, "数字经济": 0.0}, {"year": 2020, "信息披露": 6.06, "公司治理": 3.03, "融资约束": 0.0, "信息不对称": 2.02, "并购重组": 2.02, "机构投资者": 4.04, "上市公司": 2.02, "注册制": 3.03, "数字化转型": 0.0, "投资者保护": 1.01, "证券监管": 1.01, "数字经济": 1.01}, {"year": 2021, "信息披露": 7.69, "公司治理": 5.49, "融资约束": 9.89, "信息不对称": 6.59, "并购重组": 2.2, "机构投资者": 0.0, "上市公司": 2.2, "注册制": 3.3, "数字化转型": 1.1, "投资者保护": 2.2, "证券监管": 2.2, "数字经济": 5.49}, {"year": 2022, "信息披露": 4.3, "公司治理": 15.05, "融资约束": 5.38, "信息不对称": 4.3, "并购重组": 0.0, "机构投资者": 3.23, "上市公司": 0.0, "注册制": 1.08, "数字化转型": 8.6, "投资者保护": 4.3, "证券监管": 3.23, "数字经济": 7.53}, {"year": 2023, "信息披露": 8.75, "公司治理": 2.5, "融资约束": 0.0, "信息不对称": 3.75, "并购重组": 0.0, "机构投资者": 2.5, "上市公司": 3.75, "注册制": 2.5, "数字化转型": 5.0, "投资者保护": 1.25, "证券监管": 0.0, "数字经济": 1.25}, {"year": 2024, "信息披露": 10.0, "公司治理": 1.25, "融资约束": 3.75, "信息不对称": 3.75, "并购重组": 3.75, "机构投资者": 3.75, "上市公司": 0.0, "注册制": 7.5, "数字化转型": 3.75, "投资者保护": 2.5, "证券监管": 1.25, "数字经济": 1.25}, {"year": 2025, "信息披露": 5.13, "公司治理": 5.13, "融资约束": 3.85, "信息不对称": 1.28, "并购重组": 2.56, "机构投资者": 2.56, "上市公司": 1.28, "注册制": 2.56, "数字化转型": 1.28, "投资者保护": 3.85, "证券监管": 1.28, "数字经济": 0.0}, {"year": 2026, "信息披露": 9.09, "公司治理": 4.55, "融资约束": 6.06, "信息不对称": 1.52, "并购重组": 0.0, "机构投资者": 3.03, "上市公司": 3.03, "注册制": 0.0, "数字化转型": 3.03, "投资者保护": 0.0, "证券监管": 3.03, "数字经济": 1.52}]}, "rising": [{"name": "信息披露", "early": 4.35, "late": 8.22, "lift": 3.87, "early_n": 18, "late_n": 25}, {"name": "数字化转型", "early": 0.0, "late": 3.29, "lift": 3.29, "early_n": 0, "late_n": 10}, {"name": "注册制", "early": 1.21, "late": 3.29, "lift": 2.08, "early_n": 5, "late_n": 10}], "falling": [{"name": "公司治理", "early": 5.31, "late": 3.29, "lift": -2.02, "early_n": 22, "late_n": 10}]}, "themes": [{"year": 2017, "papers": 111, "市场制度与监管": 8.11, "公司治理与并购": 13.51, "数字经济与金融科技": 0.9, "ESG与绿色金融": 1.8, "融资与债务": 4.5, "市场微观结构与定价": 4.5}, {"year": 2018, "papers": 104, "市场制度与监管": 18.27, "公司治理与并购": 13.46, "数字经济与金融科技": 1.92, "ESG与绿色金融": 0.96, "融资与债务": 8.65, "市场微观结构与定价": 1.92}, {"year": 2019, "papers": 100, "市场制度与监管": 14.0, "公司治理与并购": 10.0, "数字经济与金融科技": 2.0, "ESG与绿色金融": 2.0, "融资与债务": 6.0, "市场微观结构与定价": 4.0}, {"year": 2020, "papers": 99, "市场制度与监管": 19.19, "公司治理与并购": 16.16, "数字经济与金融科技": 5.05, "ESG与绿色金融": 0.0, "融资与债务": 4.04, "市场微观结构与定价": 4.04}, {"year": 2021, "papers": 91, "市场制度与监管": 17.58, "公司治理与并购": 18.68, "数字经济与金融科技": 8.79, "ESG与绿色金融": 2.2, "融资与债务": 12.09, "市场微观结构与定价": 4.4}, {"year": 2022, "papers": 93, "市场制度与监管": 16.13, "公司治理与并购": 17.2, "数字经济与金融科技": 13.98, "ESG与绿色金融": 3.23, "融资与债务": 5.38, "市场微观结构与定价": 2.15}, {"year": 2023, "papers": 80, "市场制度与监管": 16.25, "公司治理与并购": 8.75, "数字经济与金融科技": 10.0, "ESG与绿色金融": 8.75, "融资与债务": 2.5, "市场微观结构与定价": 5.0}, {"year": 2024, "papers": 80, "市场制度与监管": 20.0, "公司治理与并购": 17.5, "数字经济与金融科技": 7.5, "ESG与绿色金融": 2.5, "融资与债务": 6.25, "市场微观结构与定价": 5.0}, {"year": 2025, "papers": 78, "市场制度与监管": 17.95, "公司治理与并购": 12.82, "数字经济与金融科技": 5.13, "ESG与绿色金融": 8.97, "融资与债务": 5.13, "市场微观结构与定价": 7.69}, {"year": 2026, "papers": 66, "市场制度与监管": 12.12, "公司治理与并购": 15.15, "数字经济与金融科技": 13.64, "ESG与绿色金融": 3.03, "融资与债务": 7.58, "市场微观结构与定价": 1.52}], "impact": {"total_citations": 67104, "h_index": 126, "gini": 0.662, "zero_rate": 4.99, "top1_share": 20.21, "top5_share": 39.45, "top10_share": 52.25, "top1_n": 10, "top10_n": 91, "mean_cites_per_year_all": 14.6, "median_cites": 32.5, "max_cites": 3413, "lorenz": [{"x": 0, "y": 0.0}, {"x": 5, "y": 0.0}, {"x": 10, "y": 0.11}, {"x": 15, "y": 0.37}, {"x": 20, "y": 0.84}, {"x": 25, "y": 1.55}, {"x": 30, "y": 2.44}, {"x": 35, "y": 3.56}, {"x": 40, "y": 4.96}, {"x": 45, "y": 6.65}, {"x": 50, "y": 8.64}, {"x": 55, "y": 11.01}, {"x": 60, "y": 13.85}, {"x": 65, "y": 17.15}, {"x": 70, "y": 21.08}, {"x": 75, "y": 25.72}, {"x": 80, "y": 31.59}, {"x": 85, "y": 38.85}, {"x": 90, "y": 47.98}, {"x": 95, "y": 60.9}, {"x": 100, "y": 100.0}], "top1_threshold": 674, "top10_threshold": 154, "papers_ge_100": 172, "share_ge_100": 67.24, "spearman_dl_cited": 0.784}, "inst": [{"name": "山东财经大学", "papers": 44, "first": 39, "frac": 34.5}, {"name": "武汉大学", "papers": 42, "first": 34, "frac": 33.8}, {"name": "南开大学", "papers": 35, "first": 27, "frac": 22.2}, {"name": "中国人民大学", "papers": 33, "first": 30, "frac": 24.1}, {"name": "中山大学", "papers": 33, "first": 16, "frac": 17.8}, {"name": "北京大学", "papers": 30, "first": 24, "frac": 23.2}, {"name": "复旦大学", "papers": 27, "first": 18, "frac": 19.3}, {"name": "东北财经大学", "papers": 26, "first": 22, "frac": 19.5}, {"name": "对外经济贸易大学", "papers": 26, "first": 22, "frac": 19.3}, {"name": "天津财经大学", "papers": 25, "first": 25, "frac": 21.5}, {"name": "南京大学", "papers": 25, "first": 23, "frac": 18.3}, {"name": "中南财经政法大学", "papers": 24, "first": 16, "frac": 16.0}, {"name": "华南理工大学", "papers": 23, "first": 19, "frac": 16.2}, {"name": "江西财经大学", "papers": 23, "first": 18, "frac": 19.9}, {"name": "上海财经大学", "papers": 20, "first": 8, "frac": 11.9}, {"name": "西南财经大学", "papers": 18, "first": 10, "frac": 11.6}, {"name": "清华大学", "papers": 17, "first": 12, "frac": 12.3}, {"name": "首都经济贸易大学", "papers": 16, "first": 11, "frac": 11.7}, {"name": "深圳证券交易所", "papers": 14, "first": 9, "frac": 9.9}, {"name": "华中科技大学", "papers": 14, "first": 10, "frac": 10.3}, {"name": "中央财经大学", "papers": 14, "first": 7, "frac": 10.0}, {"name": "深圳大学", "papers": 13, "first": 12, "frac": 11.0}, {"name": "中国社会科学院", "papers": 13, "first": 7, "frac": 8.3}, {"name": "中证金融研究院", "papers": 13, "first": 10, "frac": 11.1}, {"name": "华东政法大学", "papers": 13, "first": 12, "frac": 11.3}], "authors": {"team_dist": [{"size": 1, "papers": 208}, {"size": 2, "papers": 325}, {"size": 3, "papers": 283}, {"size": 4, "papers": 80}, {"size": 5, "papers": 3}, {"size": 6, "papers": 1}, {"size": 7, "papers": 2}], "top": [{"name": "张雪莹", "papers": 11}, {"name": "陈作华", "papers": 8}, {"name": "李青原", "papers": 8}, {"name": "张宗新", "papers": 8}, {"name": "顾海峰", "papers": 8}, {"name": "郑志刚", "papers": 7}, {"name": "楼秋然", "papers": 6}, {"name": "肖作平", "papers": 6}, {"name": "刘娥平", "papers": 6}, {"name": "陈小辉", "papers": 6}, {"name": "李湛", "papers": 5}, {"name": "习明明", "papers": 5}, {"name": "关静怡", "papers": 5}, {"name": "张红伟", "papers": 5}, {"name": "陈娇娇", "papers": 5}]}};
+const FONT = '-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif';
+const INK = '#3f4a52', LINE = '#e6dfd2', TEAL = '#0b5d6b', TEAL2 = '#12808f', AMBER = '#b45309', GREY = '#9aa4a9';
+const base = {
+  textStyle:{fontFamily:FONT,color:INK,fontSize:11},
+  tooltip:{backgroundColor:'#172027',borderWidth:0,textStyle:{color:'#fff',fontSize:11},extraCssText:'border-radius:2px;padding:8px 10px'},
+  grid:{left:52,right:36,top:44,bottom:36,containLabel:false},
+  xAxis:{axisLine:{lineStyle:{color:LINE}},axisTick:{show:false},axisLabel:{color:INK,fontSize:10.5}},
+  yAxis:{axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:LINE,type:'dashed'}},axisLabel:{color:INK,fontSize:10.5}},
+  legend:{top:6,right:8,itemWidth:10,itemHeight:10,textStyle:{fontSize:10.5,color:INK}}
+};
+function init(id,opt){ const el=document.getElementById(id); if(!el||!window.echarts) return; const c=echarts.init(el); c.setOption(Object.assign({},base,opt)); return c; }
+const years = D.yearly.map(x=>String(x.year));
+
+/* 产出 */
+init('c-output',{
+  tooltip:{trigger:'axis',formatter:p=>{const i=p[0].dataIndex;const y=D.yearly[i];return y.year+' 年'+(y.year===2026?'（第 1–10 期）':'')+'<br>论文：'+y.papers+' 篇'+(y.year===2026?'<br>年化：79 篇':'')}},
+  legend:{top:6,data:['论文数','2026 年化']},
+  xAxis:{type:'category',data:years},
+  yAxis:{type:'value',name:'篇',max:130},
+  series:[
+    {name:'论文数',type:'bar',data:D.yearly.map(x=>x.papers),barMaxWidth:34,itemStyle:{color:p=>p.dataIndex===9?'#c98a45':TEAL,borderRadius:[2,2,0,0]},label:{show:true,position:'top',fontSize:10,color:INK}},
+    {name:'2026 年化',type:'line',data:D.yearly.map((x,i)=>i===9?79:null),symbol:'diamond',symbolSize:9,lineStyle:{type:'dashed',color:AMBER,width:1.5},itemStyle:{color:AMBER},label:{show:true,position:'bottom',fontSize:10,color:AMBER,formatter:'79'}}
+  ]
+});
+
+/* 密度 */
+init('c-density',{
+  tooltip:{trigger:'axis'},
+  legend:{top:6,data:['有效篇均参考文献','基金覆盖率']},
+  xAxis:{type:'category',data:years},
+  yAxis:[{type:'value',name:'篇',max:50},{type:'value',name:'%',max:100,splitLine:{show:false}}],
+  series:[
+    {name:'有效篇均参考文献',type:'line',data:D.yearly.map(x=>x.avg_refs),smooth:true,symbol:'circle',symbolSize:5,lineStyle:{width:2.4,color:TEAL},itemStyle:{color:TEAL},areaStyle:{color:'rgba(11,93,107,.08)'}},
+    {name:'基金覆盖率',type:'line',yAxisIndex:1,data:D.yearly.map(x=>x.fund_rate),smooth:true,symbol:'circle',symbolSize:5,lineStyle:{width:2,color:AMBER},itemStyle:{color:AMBER}}
+  ]
+});
+
+/* 基金类型 */
+(function(){
+  const cats=D.fund.categories.slice();
+  const shown=cats.filter(x=>x.name!=='其他/未归类');
+  const other=cats.find(x=>x.name==='其他/未归类');
+  const data=shown.concat(other?[other]:[]).reverse();
+  init('c-fund',{
+    grid:{left:150,right:70,top:10,bottom:20},
+    xAxis:{type:'value',name:'%',max:45},
+    yAxis:{type:'category',data:data.map(x=>x.name),axisLabel:{fontSize:10.5,color:INK}},
+    tooltip:{trigger:'axis',formatter:p=>{const x=data[p[0].dataIndex];return x.name+'<br>覆盖论文：'+x.papers+' 篇<br>占受资助论文：'+x.pct_of_funded+'%'}},
+    series:[{type:'bar',data:data.map(x=>({value:x.pct_of_funded,itemStyle:{color:x.name==='其他/未归类'?GREY:TEAL}})),barMaxWidth:16,label:{show:true,position:'right',formatter:p=>data[p.dataIndex].pct_of_funded+'%',fontSize:10,color:INK}}]
+  });
+})();
+
+/* 覆盖率 */
+init('c-fund-rate',{
+  tooltip:{trigger:'axis',formatter:p=>p[0].axisValue+' 年<br>基金覆盖率：'+p[0].value+'%'},
+  xAxis:{type:'category',data:years},
+  yAxis:{type:'value',name:'%',max:100},
+  series:[{type:'line',data:D.yearly.map(x=>x.fund_rate),smooth:true,symbol:'circle',symbolSize:6,lineStyle:{width:2.6,color:TEAL},itemStyle:{color:TEAL},areaStyle:{color:'rgba(11,93,107,.10)'},
+    markLine:{silent:true,symbol:'none',data:[{yAxis:D.fund.coverage,name:'十年均值'}],lineStyle:{color:AMBER,type:'dashed'},label:{position:'insideStartTop',fontSize:9,color:AMBER,formatter:'十年均值 '+D.fund.coverage+'%'}}
+  }]
+});
+
+/* 合作 */
+init('c-coop',{
+  tooltip:{trigger:'axis',formatter:p=>{const y=D.yearly[p[0].dataIndex];return y.year+' 年<br>合著：'+y.coop+' 篇 · 独著：'+y.solo+' 篇'}} ,
+  legend:{top:6,data:['合著','独著','篇均作者']},
+  xAxis:{type:'category',data:years},
+  yAxis:[{type:'value',name:'篇',max:130},{type:'value',name:'人',max:3,splitLine:{show:false}}],
+  series:[
+    {name:'合著',type:'bar',stack:'t',data:D.yearly.map(x=>x.papers-x.solo),itemStyle:{color:TEAL}},
+    {name:'独著',type:'bar',stack:'t',data:D.yearly.map(x=>x.solo),itemStyle:{color:'#b9c8c9',borderRadius:[2,2,0,0]}},
+    {name:'篇均作者',type:'line',yAxisIndex:1,data:D.yearly.map(x=>x.avg_authors),smooth:true,symbol:'circle',symbolSize:6,lineStyle:{width:2.4,color:AMBER},itemStyle:{color:AMBER}}
+  ]
+});
+
+init('c-cross',{
+  tooltip:{trigger:'axis',formatter:p=>p[0].axisValue+' 年<br>跨机构合作率：'+p[0].value+'%'},
+  xAxis:{type:'category',data:years},yAxis:{type:'value',name:'%',max:60},
+  series:[{type:'line',data:D.yearly.map(x=>x.cross_inst_rate),smooth:true,symbol:'circle',symbolSize:6,lineStyle:{width:2.6,color:TEAL2},itemStyle:{color:TEAL2},areaStyle:{color:'rgba(18,128,143,.10)'}}]
+});
+
+/* 团队规模 */
+init('c-team',{
+  tooltip:{trigger:'axis',formatter:p=>p[0].axisValue+' 人团队：'+p[0].value+' 篇'},
+  xAxis:{type:'category',data:D.authors.team_dist.map(x=>String(x.size))},
+  yAxis:{type:'value',name:'篇'},
+  series:[{type:'bar',data:D.authors.team_dist.map(x=>x.papers),barMaxWidth:28,itemStyle:{color:TEAL,borderRadius:[2,2,0,0]},label:{show:true,position:'top',fontSize:10,color:INK}}]
+});
+
+/* 关键词渗透 */
+(function(){
+  const rows=D.kw.top.slice(0,20).reverse();
+  init('c-kw',{
+    grid:{left:110,right:70,top:10,bottom:20},
+    xAxis:{type:'value',name:'%'},
+    yAxis:{type:'category',data:rows.map(x=>x.name),axisLabel:{fontSize:10.5,color:INK}},
+    tooltip:{trigger:'axis',formatter:p=>{const x=rows[p[0].dataIndex];return x.name+'<br>含该词论文：'+x.papers+' 篇 / 902<br>渗透率：'+x.penetration+'%'}},
+    series:[{type:'bar',data:rows.map(x=>x.penetration),barMaxWidth:14,itemStyle:{color:TEAL},label:{show:true,position:'right',formatter:p=>rows[p.dataIndex].penetration+'%',fontSize:10,color:INK}}]
+  });
+})();
+
+/* 热力 */
+(function(){
+  const H=D.kw.heatmap, data=[];
+  H.rows.forEach((r,yi)=>H.keywords.forEach((k,ki)=>data.push([ki,yi,r[k]||0])));
+  const max=Math.max(...data.map(d=>d[2]));
+  init('c-heat',{
+    grid:{left:110,right:30,top:20,bottom:70},
+    tooltip:{formatter:p=>H.years[p.dataIndex[1]]+' 年 · '+H.keywords[p.dataIndex[0]]+'<br>渗透率：'+p.data[2]+'%'},
+    xAxis:{type:'category',data:H.years.map(String),splitArea:{show:true}},
+    yAxis:{type:'category',data:H.keywords,splitArea:{show:true},axisLabel:{fontSize:10.5,color:INK}},
+    visualMap:{min:0,max:max,calculable:true,orient:'horizontal',left:'center',bottom:8,inRange:{color:['#f2eee4','#cfe0dd','#7fb3b4','#0b5d6b']},textStyle:{fontSize:10,color:INK}},
+    series:[{type:'heatmap',data:data,label:{show:true,fontSize:9.5,color:'#172027'},emphasis:{itemStyle:{shadowBlur:8,shadowColor:'rgba(0,0,0,.2)'}}}]
+  });
+})();
+
+/* 主题热力 */
+(function(){
+  const T=['市场制度与监管','公司治理与并购','数字经济与金融科技','ESG与绿色金融','融资与债务','市场微观结构与定价'];
+  const data=[];
+  D.themes.forEach((r,yi)=>T.forEach((t,ti)=>data.push([yi,ti,r[t]])));
+  const max=Math.max(...data.map(d=>d[2]));
+  init('c-theme',{
+    grid:{left:110,right:30,top:20,bottom:62},
+    tooltip:{formatter:p=>D.themes[p.dataIndex[0]].year+' 年 · '+T[p.dataIndex[1]]+'<br>覆盖论文占比：'+p.data[2]+'%'},
+    xAxis:{type:'category',data:years,splitArea:{show:true}},
+    yAxis:{type:'category',data:T,splitArea:{show:true},axisLabel:{fontSize:10.5,color:INK}},
+    visualMap:{min:0,max:max,calculable:true,orient:'horizontal',left:'center',bottom:6,inRange:{color:['#f2eee4','#cfe0dd','#7fb3b4','#0b5d6b']},textStyle:{fontSize:10,color:INK}},
+    series:[{type:'heatmap',data:data,label:{show:true,fontSize:9.5,color:'#172027'},emphasis:{itemStyle:{shadowBlur:8,shadowColor:'rgba(0,0,0,.2)'}}}]
+  });
+})();
+
+/* 梯队 */
+init('c-cohort',{
+  tooltip:{trigger:'axis',formatter:p=>{const x=D.cohorts[p[0].dataIndex];return x.cohort+' 年梯队<br>论文：'+x.n+' 篇 · 平均曝光：'+x.exposure+' 年<br>引用速度：'+x.avg_cpy+' 次/年<br>篇均被引：'+x.avg_cited}},
+  xAxis:{type:'category',data:D.cohorts.map(x=>x.cohort)},
+  yAxis:{type:'value',name:'次/年'},
+  series:[{type:'bar',data:D.cohorts.map(x=>x.avg_cpy),barMaxWidth:52,itemStyle:{color:p=>p.dataIndex===2?AMBER:TEAL,borderRadius:[2,2,0,0]},label:{show:true,position:'top',formatter:p=>D.cohorts[p.dataIndex].avg_cpy,fontSize:11,color:INK}}]
+});
+
+/* 洛伦兹 */
+(function(){
+  const L=D.impact.lorenz;
+  init('c-lorenz',{
+    grid:{left:52,right:24,top:24,bottom:36},
+    xAxis:{type:'value',name:'论文累计占比 %',max:100},
+    yAxis:{type:'value',name:'被引累计占比 %',max:100},
+    series:[
+      {name:'实际分布',type:'line',data:L.map(x=>[x.x,x.y]),smooth:true,symbol:'none',lineStyle:{width:2.6,color:TEAL},areaStyle:{color:'rgba(11,93,107,.10)'}},
+      {name:'完全均等',type:'line',data:[[0,0],[100,100]],symbol:'none',lineStyle:{width:1,type:'dashed',color:GREY}}
+    ],
+    tooltip:{trigger:'axis',formatter:p=>'论文累计 '+p[0].value[0]+'% → 被引累计 '+p[0].value[1]+'%'}
+  });
+})();
+
+/* 机构 */
+(function(){
+  const rows=D.inst.slice(0,20).reverse();
+  init('c-inst',{
+    grid:{left:150,right:60,top:16,bottom:20},
+    legend:{top:0,data:['第一作者单位','合作参与']},
+    xAxis:{type:'value',name:'篇'},
+    yAxis:{type:'category',data:rows.map(x=>x.name),axisLabel:{fontSize:10.5,color:INK}},
+    tooltip:{trigger:'axis',formatter:p=>{const x=rows[p[0].dataIndex];return x.name+'<br>参与论文：'+x.papers+' 篇<br>第一作者：'+x.first+' 篇<br>折算贡献：'+x.frac}},
+    series:[
+      {name:'第一作者单位',type:'bar',stack:'i',data:rows.map(x=>x.first),itemStyle:{color:TEAL},barMaxWidth:14},
+      {name:'合作参与',type:'bar',stack:'i',data:rows.map(x=>x.papers-x.first),itemStyle:{color:'#a9c3c4',borderRadius:[0,2,2,0]},label:{show:true,position:'right',formatter:p=>rows[p.dataIndex].papers,fontSize:10,color:INK}}
+    ]
+  });
+})();
+
+/* progress */
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progress').style.width=(window.scrollY/h*100)+'%';
+});
+window.addEventListener('resize',()=>document.querySelectorAll('[id^="c-"]').forEach(el=>{const c=echarts.getInstanceByDom(el);if(c)c.resize()}));
+</script>
+</body>
+</html>
