@@ -161,7 +161,7 @@ footer a:hover{text-decoration:underline}
     <div>
       <div class="kicker">CNKI · BIBLIOMETRICS · 2017—2026</div>
       <h1 class="serif">《证券市场导报》<br>十年学术结构变迁<em>。</em></h1>
-      <p class="deck">以 902 篇正式论文为样本，从产出规模、基金资助、作者合作、主题演化与引用影响力五个维度，刻画一本中国资本市场核心期刊在注册制改革、数字化转型与 ESG 浪潮中的知识生产轨迹。</p>
+      <p class="deck">以 902 篇正式论文为样本，从产出规模、基金资助、合作网络、主题演化、研究前沿与引用影响力六个维度，刻画一本中国资本市场核心期刊在注册制改革、数字化转型与 ESG 浪潮中的知识生产轨迹。</p>
       <div class="cover-meta">
         <div><div class="cm-label">样本</div><div class="cm-value">902 篇 / 2017–2026</div></div>
         <div><div class="cm-label">数据快照</div><div class="cm-value">2026-10-30</div></div>
@@ -320,19 +320,19 @@ footer a:hover{text-decoration:underline}
 
   <h3 style="font-size:18px;margin:38px 0 10px" class="serif">主题流的十年迁移</h3>
   <p style="font-size:13.5px;color:var(--ink2);margin-bottom:18px;max-width:900px">把十年切成三个时段（2017–2019 / 2020–2022 / 2023–2026），桑基图展示各主题覆盖率在时段间的延续与消长。可以看到“市场制度与监管”始终是主干道，而“数字经济与金融科技”“ESG与绿色金融”两条支流在 2020 年后明显变宽。</p>
-  <div class="panel"><h3>主题演化桑基图（三时段）</h3><div class="ph">流宽∝相邻时段主题覆盖率的几何均值；仅显示占比 &gt;0.5% 的流</div><div id="c-sankey" class="chart tall"></div></div>
+  <div class="panel"><h3>主题演化桑基图（三时段）</h3><div class="ph">流宽∝相邻时段主题覆盖率的几何均值；仅显示占比 &gt;0.5% 的流；三列从左至右为 2017–2019 / 2020–2022 / 2023–2026</div><div id="c-sankey" class="chart" style="height:540px"></div></div>
 </section>
 
 <section id="frontier">
   <div class="sec-head"><div class="sec-no">06</div><div><h2 class="serif">研究前沿：突现词与生产率规律</h2><div class="sec-en">Research fronts &amp; productivity</div></div></div>
-  <p class="lede">前沿不是“用得最多的词”，而是“短时间内渗透率突然抬头的词”。对 TOP 40 关键词逐一做年度渗透率的 z 分数扫描（简化 Kleinberg 突现检测），识别出 8 个突现区间——它们与新三板改革、数字经济国家战略、注册制全面落地、新一轮政策工具密集出台的时间线几乎一一对应。</p>
+  <p class="lede">前沿不是“用得最多的词”，而是“短时间内渗透率突然抬头的词”。对 TOP 40 关键词逐一做年度渗透率的 z 分数扫描（简化 Kleinberg 突现检测），识别出 14 个突现区间——其中新三板改革、数字经济国家战略、REITs 试点、注册制全面落地与新一轮政策工具的出台时间线清晰可辨。</p>
   <div class="panel"><h3>突现词时间线（2017–2026）</h3><div class="ph">色条为 z≥1 的连续突现区间，右注起止年份；按突现强度排序</div><div id="c-burst" class="chart tall"></div>
-    <p class="caption">突现强度 = 区间内各年 z 分数之和。该方法把“持续高频”与“突然崛起”分开：信息披露常年高频但无突现，政府引导基金 2025–2026 年才急速抬头。</p></div>
+    <p class="caption">突现强度 = 区间内各年 z 分数之和。该方法把“持续高频”与“突然崛起”分开：融资约束常年高频但无突现，政府引导基金 2025–2026 年才急速抬头。</p></div>
   <div class="grid2">
     <div class="panel"><h3>Lotka 定律：作者生产率分布</h3><div class="ph">横轴为每人发文数，纵轴为作者数（对数刻度）</div><div id="c-lotka" class="chart"></div>
       <p class="caption">拟合指数 a=3.26（R²=0.954），比经典 Lotka 的 a≈2 更陡：84.1% 的作者只发表 1 篇，生产率分布比一般科学领域更不均——核心期刊的“一次性作者”比例极高。</p></div>
     <div class="panel"><h3>读图：前沿轮换的三条规律</h3>
-      <p style="font-size:13.5px;color:var(--ink2)">① <b>政策先行</b>：八个突现词中六个直接对应制度事件，学术前沿跟随监管议程而非理论内生演化；② <b>窗口约两年</b>：突现区间中位长度为 2 年，之后议题或被吸收为常态（数字经济），或随制度周期退潮（新三板）；③ <b>技术议题渗透更深</b>：数字化转型在突现后留在高频区，而纯政策词的回落更快。</p>
+      <p style="font-size:13.5px;color:var(--ink2)">① <b>政策先行</b>：14 个突现词中 6 个直接对应制度事件（新三板、数字经济、不动产投资信托基金、数字化转型、资本市场开放、政府引导基金），信息透明度、股权质押等亦与监管周期间接相关——学术前沿跟随监管议程，而非理论内生演化；② <b>窗口约两年</b>：突现区间中位长度 2 年，之后议题或被吸收为常态（信息披露 2023–2024 突现后留在高频区），或随制度周期退潮（新三板）；③ <b>技术议题渗透更深</b>：数字化转型突现后渗透率维持在高位，而纯政策词的回落更快。</p>
     </div>
   </div>
 </section>
@@ -672,10 +672,12 @@ init('c-cohort',{
   const pal=['#0b5d6b','#4468a0','#5e8c61','#b45309','#8a6d3b','#6b5b95'];
   init('c-sankey',{
     tooltip:{trigger:'item',formatter:p=>p.dataType==='edge'?(p.data.source.replace('|',' · ')+' → '+p.data.target.replace('|',' · ')):p.name.replace('|',' · ')},
-    series:[{type:'sankey',left:170,right:170,top:24,bottom:20,nodeWidth:14,nodeGap:16,
-      data:S.nodes.map(n=>({name:n.name,itemStyle:{color:pal[T.indexOf(n.name.split('|')[0])]}})),
+    graphic:S.periods.map((p,i)=>({type:'text',top:26,style:{text:p.label+'（'+p.n+' 篇）',fontSize:10.5,fill:'#7b858c',fontWeight:600},left:['14%','46%','76%'][i]})),
+    series:[{type:'sankey',left:160,right:60,top:58,bottom:24,nodeWidth:13,nodeGap:18,
+      data:S.nodes.map(n=>({name:n.name,itemStyle:{color:pal[T.indexOf(n.name.split('|')[0])]},
+        label:{show:n.name.endsWith(S.periods[0].label)}})),
       links:S.links,orient:'horizontal',
-      label:{fontSize:10,color:'#172027',formatter:p=>p.name.split('|')[0]+'  '+p.name.split('|')[1]},
+      label:{position:'left',fontSize:10.5,color:'#172027',formatter:p=>p.name.split('|')[0]},
       lineStyle:{color:'gradient',opacity:.3}
     }]
   });
@@ -690,7 +692,7 @@ init('c-cohort',{
     xAxis:{type:'value',min:2017,max:2026.6,interval:1,axisLabel:{formatter:v=>String(Math.round(v)),fontSize:10.5,color:INK}},
     yAxis:{type:'category',data:B.map(b=>b.word),axisLabel:{fontSize:10.5,color:INK}},
     series:[
-      {type:'bar',stack:'b',data:B.map(b=>b.begin-2017),itemStyle:{color:'transparent'},silent:true,tooltip:{show:false},barMaxWidth:13},
+      {type:'bar',stack:'b',data:B.map(b=>b.begin),itemStyle:{color:'transparent'},silent:true,tooltip:{show:false},barMaxWidth:13},
       {type:'bar',stack:'b',data:B.map(b=>b.end-b.begin+1),itemStyle:{color:'#b45309',borderRadius:[3,3,3,3]},barMaxWidth:13,
        label:{show:true,position:'right',fontSize:9.5,color:'#3f4a52',formatter:p=>{const b=B[p.dataIndex];return b.begin+'–'+b.end+'  ·  '+b.strength}}}
     ]
